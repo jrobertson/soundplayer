@@ -11,9 +11,9 @@ include WaveFile
 
 class Sound
 
-  def self.play(filename)
+  def self.play(filename, loopx=1)
 
-    Sound.new(filename).play
+    sound = Sound.new(filename)
     
     seconds = case File.extname(filename)[1..-1].to_sym
     when :wav
@@ -23,10 +23,10 @@ class Sound
     when :ogg
       OggInfo.open(filename).length
     end
-    
-    sleep seconds
+        
+    return loop { sound.play; sleep seconds } if loopx < 1
+    loopx.times { sound.play; sleep seconds }    
 
   end
 
 end
-
